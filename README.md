@@ -2,182 +2,226 @@
 
 Modular Selenium automation script to search for a product and add it to the cart.
 
-## Features
+---
 
-✓ **No hardcoded sleeps** - Uses WebDriverWait with explicit expected conditions  
-✓ **Modular design** - Separate page object classes (StorePage, SearchPage, ProductPage, CartPage)  
-✓ **Readable code** - Clear class names and methods for maintainability  
-✓ **Error handling** - Catches exceptions and saves screenshots for debugging  
-✓ **Proper waits** - All interactions wait for elements to be ready (clickable, visible, present)
+# Features
 
-## Project Structure
+* ✅ No hardcoded sleeps — Uses `WebDriverWait` with explicit expected conditions
+* ✅ Modular design — Separate page object classes (`StorePage`, `SearchPage`, `ProductPage`, `CartPage`)
+* ✅ Readable code — Clear class names and methods for maintainability
+* ✅ Error handling — Catches exceptions and saves screenshots for debugging
+* ✅ Proper waits — All interactions wait for elements to be ready
 
-```
+---
+
+# Project Structure
+
+```bash
 AdNabuAutomation/
-├── store_automation.py      # Main automation script
-├── requirements.txt          # Python dependencies
-└── README.md                # This file
+├── store_automation.py
+├── requirements.txt
+└── README.md
 ```
 
-## Setup Instructions
+---
 
-### 1. Create Virtual Environment
+# Setup Instructions
 
-```powershell
+## 1. Create Virtual Environment
+
+```bash
 cd D:\AdNabuAutomation
 python -m venv venv
 ```
 
-### 2. Activate Virtual Environment
+---
 
-```powershell
-# On Windows PowerShell:
+## 2. Activate Virtual Environment
+
+### Windows PowerShell
+
+```bash
 .\venv\Scripts\Activate.ps1
+```
 
-# If you get execution policy error, run:
+### If execution policy error occurs
+
+```bash
 Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 ```
 
-### 3. Install Dependencies
+---
 
-```powershell
+## 3. Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 4. Download ChromeDriver
+---
 
-The script requires ChromeDriver for Chrome browser automation.
+# Download ChromeDriver
 
-**Option A: Automatic (recommended)**
-- Selenium 4.6+ automatically downloads the correct ChromeDriver
-- No additional setup needed
+## Option A — Automatic (Recommended)
 
-**Option B: Manual**
-1. Download ChromeDriver from: https://chromedriver.chromium.org/
-2. Version should match your Chrome version (`chrome://version/`)
-3. Place in PATH or project folder
+Selenium 4.6+ automatically downloads the correct ChromeDriver.
 
-## Running the Script
+No additional setup required.
 
-```powershell
+---
+
+## Option B — Manual
+
+Download ChromeDriver from:
+
+https://chromedriver.chromium.org/
+
+* ChromeDriver version should match your Chrome browser version
+* Place ChromeDriver in PATH or project folder
+
+---
+
+# Running the Script
+
+```bash
 python store_automation.py
 ```
 
-## How It Works
+---
 
-### Page Objects
+# Automation Flow
 
-**StorePage** (Base class)
-- `visit(url)` - Navigate to store
-- `unlock_store(password)` - Enter password to access store
+1. Unlock Store using password
+2. Search for product
+3. Open product page
+4. Add product to cart
+5. Close cart drawer
+6. Open cart again from cart icon
+7. Verify product exists in cart
 
-**SearchPage** (Inherits from StorePage)
-- `open_search()` - Open search dialog
-- `search_product(name)` - Search for product by name
-- `select_first_product()` - Click first search result
+---
 
-**ProductPage** (Inherits from StorePage)
-- `get_product_name()` - Get product title
-- `add_to_cart()` - Add product to cart with verification
+# Page Objects
 
-**CartPage** (Inherits from StorePage)
-- `open_cart()` - Open shopping cart
-- `verify_product_in_cart(name)` - Verify product is in cart
+## StorePage
 
-### Automation Flow
+* `visit(url)` → Navigate to store
+* `unlock_store(password)` → Unlock password protected store
 
-1. **Unlock Store** → Enter password "AdNabuQA"
-2. **Search** → Search for "snowboard" products
-3. **Select** → Click first search result
-4. **Add to Cart** → Add selected product to cart
-5. **Verify** → Confirm product is in shopping cart
+---
 
-## Configuration
+## SearchPage
 
-Edit these values in `store_automation.py` to customize:
+* `search_and_navigate_to_product(name)` → Open product page
+
+---
+
+## ProductPage
+
+* `get_product_name()` → Get product title
+* `add_to_cart()` → Add product to cart
+
+---
+
+## CartPage
+
+* `close_cart_drawer()` → Close cart drawer
+* `open_cart()` → Open cart from cart icon
+* `verify_product_in_cart(name)` → Verify product exists in cart
+
+---
+
+# Configuration
+
+Update values in `store_automation.py`
 
 ```python
 STORE_URL = "https://adnabu-store-assignment1.myshopify.com/"
 STORE_PASSWORD = "AdNabuQA"
-SEARCH_PRODUCT = "snowboard"  # Change search term here
+SEARCH_PRODUCT = "Selling Plans Ski Wax"
 ```
 
-## Headless Mode
+---
 
-To run without opening a browser window, uncomment this line in `store_automation.py`:
+# Headless Mode
+
+To run browser in background mode:
 
 ```python
 chrome_options.add_argument("--headless")
 ```
 
-## Wait Strategy
+---
 
-All interactions use explicit waits:
-- **element_to_be_clickable()** - Element is visible and enabled
-- **visibility_of_element_located()** - Element is visible in viewport
-- **presence_of_element_located()** - Element exists in DOM
+# Wait Strategy
 
-Timeout: **10 seconds** (adjustable via `WebDriverWait(driver, timeout=10)`)
+Uses Explicit Waits:
 
-## Troubleshooting
+* `element_to_be_clickable()`
+* `visibility_of_element_located()`
+* `presence_of_element_located()`
+* `invisibility_of_element_located()`
 
-| Issue | Solution |
-|-------|----------|
-| ChromeDriver not found | Install via `pip install webdriver-manager` and use it |
-| Element not found | Check selectors match current page HTML (might change) |
-| Timeout errors | Increase wait timeout in `WebDriverWait` constructor |
-| Password doesn't work | Verify `STORE_PASSWORD` matches actual password |
+Default timeout:
 
-## Example Output
-
+```python
+WebDriverWait(driver, 10)
 ```
+
+---
+
+# Troubleshooting
+
+| Issue                  | Solution                                     |
+| ---------------------- | -------------------------------------------- |
+| ChromeDriver not found | Update Selenium or install webdriver-manager |
+| TimeoutException       | Increase WebDriverWait timeout               |
+| Element not found      | Verify XPath/CSS selector                    |
+| Cart not opening       | Verify cart drawer selectors                 |
+| Password issue         | Verify correct store password                |
+
+---
+
+# Example Output
+
+```text
 ============================================================
 ADNABU STORE AUTOMATION - SEARCH & ADD TO CART
 ============================================================
 
-Navigated to https://adnabu-store-assignment1.myshopify.com/
-Entered store password
-Clicked Enter button
-Store unlocked successfully
-
-------------------------------------------------------------
 STEP 1: Store unlocked ✓
-------------------------------------------------------------
-
-Opened search
-Searched for: snowboard
-Clicked first product from search results
-
-------------------------------------------------------------
 STEP 2: Product found ✓
-------------------------------------------------------------
-
-Clicked Add to cart for: The Collection Snowboard: Liquid
-Product added to cart successfully!
-
-------------------------------------------------------------
 STEP 3: Product added to cart ✓
-------------------------------------------------------------
-
-Opened cart
-✓ Verified: The Collection Snowboard: Liquid is in cart
+STEP 4: Product verified in cart ✓
 
 ============================================================
 AUTOMATION COMPLETED SUCCESSFULLY ✓
 ============================================================
 ```
 
-## Next Steps
+---
 
-To extend this automation:
-- Add more test scenarios (checkout, payment)
-- Use pytest for test framework
-- Add logging instead of print statements
-- Create fixtures for common setup/teardown
-- Add cross-browser support
+# Future Improvements
 
-## Notes
+* Add pytest framework
+* Add logging
+* Add HTML reports
+* Add cross-browser support
+* Add data-driven testing
+* Add CI/CD pipeline
 
-- Store is Shopify-based (may have dynamic elements)
-- Search results depend on available products
-- Add to cart button state changes after adding (updates automatically)
+---
+
+# Tech Stack
+
+* Python
+* Selenium WebDriver
+* ChromeDriver
+* Explicit Waits
+* Page Object Model (POM)
+
+---
+
+# Author
+
+Diksha Rani
